@@ -1,3 +1,6 @@
+# This file is solely for downloading all data from Yahoo Finance and saving
+# it to a csv file to automate the process of downloading data as time goes on
+
 import pandas as pd
 import numpy as np
 import yfinance as yf
