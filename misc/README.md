@@ -1,0 +1,1 @@
+This folder is for extra files that we create and don't know where they go or what to do with them
