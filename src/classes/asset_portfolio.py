@@ -3,7 +3,7 @@
 import pandas as pd
 import numpy as np
 from scipy.stats import norm, t
-from objects import rf
+from classes.objects import rf
 
 class AssetPortfolio:
 

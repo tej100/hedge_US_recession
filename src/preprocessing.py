@@ -5,17 +5,11 @@
 
 import pandas as pd
 import os
+from classes.objects import import_data
 
 # __Download Data__
 
-data_dict = {}
-ignore_files = ["README.md"]
-# Get all files in directory (make sure your relative root is the project repository)
-for filename in os.scandir("RAW_DATA"):
-    if filename.is_file() and filename.name not in ignore_files:
-        df = pd.read_csv("RAW_DATA/" + filename.name, index_col="Date", parse_dates=True)
-        name = filename.name.split(".")[0]
-        data_dict[name] = df
+data_dict = import_data("RAW_DATA", ignore_files=["README.md"])
 
 # Categorize data based on where we pulled them from and put them in their own lists
 
