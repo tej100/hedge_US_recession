@@ -2,8 +2,8 @@
 
 import pandas as pd
 import numpy as np
-from scipy.stats import norm, t
-from classes.objects import rf
+from scipy.stats import t, f
+from objects import rf
 
 class AssetPortfolio:
 
@@ -35,9 +35,9 @@ class AssetPortfolio:
 
         # Get metrics of assets and portfolio
         self.correlation = self.__correlation()
-        self.market_mean, self.asset_mean, self.portfolio_mean = self.__mean_returns()
+        self.market_mean, self.asset_mean, self.port_mean = self.__mean_returns()
         self.market_vol, self.asset_vol, self.port_vol = self.__volatility()
-        self.sharpe_ratio = (self.portfolio_mean - rf) / self.port_vol
+        self.sharpe_ratio = (self.port_mean - rf) / self.port_vol
 
         # Get CAPM of asset vs market
         self.alpha, self.beta = self.CAPM()
@@ -58,7 +58,7 @@ class AssetPortfolio:
     ###########
 
     def __repr__(self) -> str:
-        return f"AssetPortfolio({self.asset_name})"
+        return f"Portfolio of {self.asset_name} and {self.market_name}"
     
     def __correlation(self) -> float:
         return self.asset["Log Returns"].corr(self.market["Log Returns"])
@@ -109,20 +109,32 @@ class AssetPortfolio:
         """
         Hypothesis Test to see if the mean returns of the portfolio are significantly greater from the risk-free rate.
         """
-        mean = self.portfolio_mean
+        mean = self.port_mean
         std = self.port_vol
         t_stat = (mean - rf) / (std / np.sqrt(len(self.portfolio)))
-        p_value = 1 - t.cdf(t_stat, len(self.portfolio)-1)
+        p_value = 1 - float(t.cdf(t_stat, len(self.portfolio)-1))
+
+        print("Portfolio Returns are statistically greater than the risk-free rate"
+              if p_value < alpha_level else
+              "Portfolio Returns are not statistically greater than the risk-free rate")
         
-        return True if p_value < alpha_level else False
+        return p_value < alpha_level
 
 
-    def test_volatility(self, other_vol : float):
+    def test_volatility(self, other : 'AssetPortfolio', alpha_level : float = 0.05):
         """
         Hypothesis Test to see if the volatility of the portfolio is significantly different from the market.
         """
-        f_stat = (self.port_vol**2) / (other_vol**2)
-        p_value = 1 - norm.cdf(f_stat)
+        f_stat = (self.port_vol**2) / (other.port_vol**2)
+        f_crit_lower = f.ppf(1-alpha_level/2, len(self.portfolio)-1, len(other.portfolio)-1),
+        f_crit_upper = f.ppf(alpha_level/2, len(self.portfolio)-1, len(other.portfolio)-1)
+        
+
+        print(f"{self} Volatility is statistically different from {other} volatility"
+                if f_stat < f_crit_lower or f_stat > f_crit_upper else
+                f"{self} Volatility is not statistically different from {other} volatility")
+
+        return f_stat < f_crit_lower or f_stat > f_crit_upper
 
         
     def optimize_weights(self):
