@@ -2,7 +2,7 @@
 
 import pandas as pd
 import numpy as np
-from scipy.stats import norm
+from scipy.stats import norm, t
 from objects import rf
 
 class AssetPortfolio:
@@ -111,17 +111,18 @@ class AssetPortfolio:
         """
         mean = self.portfolio_mean
         std = self.port_vol
-        z = (mean - rf) / (std / np.sqrt(len(self.portfolio)))
-        p_value = 1 - norm.cdf(z)
+        t_stat = (mean - rf) / (std / np.sqrt(len(self.portfolio)))
+        p_value = 1 - t.cdf(t_stat, len(self.portfolio)-1)
         
         return True if p_value < alpha_level else False
 
 
-    def test_volatility(self, other : "AssetPortfolio"):
+    def test_volatility(self, other_vol : float):
         """
         Hypothesis Test to see if the volatility of the portfolio is significantly different from the market.
         """
-        print(other)
+        f_stat = (self.port_vol**2) / (other_vol**2)
+        p_value = 1 - norm.cdf(f_stat)
 
         
     def optimize_weights(self):
