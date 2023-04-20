@@ -22,9 +22,10 @@ for filename in os.scandir("RAW_DATA"):
 # Yahoo Finance Data
 yfinance_data = ["T3", "T10", "T20", "SP500", "NASDAQ", "DOW", "BTC", "ETH", "OIL", "GOLD", "REST"]
 
-# ## Clean Yahoo Finance Data
+# Clean Yahoo Finance Data
 
 for k in yfinance_data:
+    # Interpolate missing values
     data_dict[k] = data_dict[k][["Adj Close", "Volume"]].interpolate(method="time")
     data_dict[k]["Returns"] = data_dict[k]["Adj Close"].pct_change().fillna(0)
     # Check if there are still any nan values in the data
