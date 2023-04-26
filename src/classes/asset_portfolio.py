@@ -2,8 +2,9 @@
 
 import pandas as pd
 import numpy as np
+import statsmodels.formula.api as sm
 from scipy.stats import t, f
-from objects import rf
+from classes.objects import rf
 
 class AssetPortfolio:
 
@@ -99,10 +100,22 @@ class AssetPortfolio:
         """
         Calculates the CAPM of the asset vs the market.
         """
+        # Use ols to get alpha and beta and their p-values
+        #TODO
+        
         var = np.var(self.market["Log Returns"])
         cov = self.market["Log Returns"].cov(self.asset["Log Returns"])
+        
         beta = cov / var
         alpha = self.asset_mean - rf - beta * (self.market_mean - rf)
+       
+        # data = pd.concat([self.market["Log Returns"], self.asset["Log Returns"]], axis = 1).rename(columns = { "Log Returns" :"Market", "Log Returns" : "Asset"})
+        # model = sm.ols("Asset ~ Market", data)
+        # result = model.fit()
+        # df = pd.read_html(result.summary().tables[1].as_html(),header=0,index_col=0)[0]
+        # beta=df['coef'].values[1]
+        # alpha=df['coef'].values[0]
+
         return (alpha, beta)
     
     def test_returns(self, alpha_level : float = 0.05) -> bool:
