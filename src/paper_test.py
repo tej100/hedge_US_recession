@@ -3,6 +3,7 @@ import os
 import sys
 import time
 import warnings
+from loguru import logger
 
 # Data Manipulation
 import pandas as pd
@@ -19,7 +20,7 @@ import seaborn as sns
 # Module Imports
 from classes.asset_portfolio import AssetPortfolio
 from classes.objects import import_data
-from classes.objects import color_palette
+from classes.objects import color_palette, rf
 
 # Presets
 warnings.filterwarnings("ignore")
@@ -27,37 +28,29 @@ warnings.filterwarnings("ignore")
 # From CLEAN_DATA folder, import all data
 data_dict = import_data("CLEAN_DATA", ignore_files=["README.md"])
 
+recession_portfolios = {}
+bullish_portfolios = {}
+full_portfolios = {}
+
 # Replace all values in data_dict with AssetPortfolio objects
-for k, v in data_dict.items(): data_dict[k] = AssetPortfolio(k)
+for k in data_dict.keys():
+    logger.info(f"Creating Portfolios for {k}")
+    full_portfolios[k] = AssetPortfolio(k)
+    recession_portfolios[k] = AssetPortfolio(k, "recession")
+    bullish_portfolios[k] = AssetPortfolio(k, "bullish")
+    logger.success(f"Portfolios for {k} Created")
 
-print(data_dict)
 
-# Analysis
+############
+# Analysis #
+############
 
-# Make nested dictionary of all asset metrics
-metrics_dict = {}
-for k, v in data_dict.items():
-    metrics_dict[k] = {
-        "Correlation": v.correlation,
-        "Excess Return": v.port_mean - v.market_mean,
-        "Market Volatility": v.market_vol,
-        "Asset Volatility": v.asset_vol,
-        "Portfolio Volatility": v.port_vol,
-        "Sharpe Ratio": v.sharpe_ratio,
-        "Alpha": v.alpha,
-        "Beta": v.beta
-    }
-# Send to dataframe
-df = pd.DataFrame(metrics_dict).T
-# df.to_csv("metrics.csv")
-print(df)
+# Import csvs from OUTPUT_FILES folder
+full_metrics = pd.read_csv("OUTPUT_FILES/metrics.csv", index_col="Unnamed: 0")
+recession_metrics = pd.read_csv("OUTPUT_FILES/metrics_recession.csv", index_col="Unnamed: 0")
+bullish_metrics = pd.read_csv("OUTPUT_FILES/metrics_bullish.csv", index_col="Unnamed: 0")
 
-# Plotting Excess Return bar graph matplotlib
-fig, ax = plt.subplots(figsize=(10, 10))
-ax.bar(df.index, df["Excess Return"], color=color_palette["stevens red"])
-ax.set_title("Excess Return of Assets vs. Market")
-ax.set_xlabel("Asset")
-ax.set_ylabel("Excess Return")
-plt.xticks(rotation=90)
-plt.show()
+print(full_metrics)
 
+
+# WORK HERE

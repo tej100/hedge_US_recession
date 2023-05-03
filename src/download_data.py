@@ -1,5 +1,7 @@
 # This file is solely for downloading all data from Yahoo Finance and saving
 # it to a csv file to automate the process of downloading data as time goes on
+#TODO
+# Change to weekly data and align indices properly so dates match up
 
 import pandas as pd
 import yfinance as yf
@@ -24,7 +26,18 @@ tickers = {
     "ETH-USD" : "ETH",
     "BZ=F" : "OIL",
     "GC=F" : "GOLD",
-    "VNQ" : "REST"
+    "VNQ" : "REST",
+    "^SP500-30" : "CSTP",
+    "XLV" : "HLC",
+    "^VIX" : "VOL",
+    "ZW=F" : "WHEAT",
+    #"AW=F" : "COMD",
+    "DX-Y.NYB" : "USD",
+    "GE=F" : "EURO",
+    #"URA" : "URNM",
+    "ZC=F" : "CORN",
+    #"CPI" : "CPI",
+    #"ZS=F" : "SOY"
 }
 
 #################

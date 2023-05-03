@@ -1,1 +1,0 @@
-This folder stores all the raw data aggregated from various sources to use for the research

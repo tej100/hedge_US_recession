@@ -4,19 +4,28 @@ import pandas as pd
 import numpy as np
 import statsmodels.formula.api as sm
 from scipy.stats import t, f
-from classes.objects import rf
+from classes.objects import rf, recession_periods, bullish_periods
+import matplotlib.pyplot as plt
 
 class AssetPortfolio:
 
     asset_weight = 0.5
     market_weight = 1-asset_weight
     
-    def __init__(self, asset : str) -> None:
+    def __init__(self, asset : str, time_period : str = "None") -> None:
         """
-        params: asset (str) - The name of the asset to be used in the portfolio (as denoted in CLEAN_DATA folder)
+        Initializes the AssetPortfolio object.
+
+        Parameters:
+        --------------
+        asset : str
+            The name of the asset to be used in the portfolio (as denoted in CLEAN_DATA folder)
+        time_period : str
+            The time period to be used for the portfolio. Can be either "bullish" or "recession" or "None"
         """
         self.market_name = "SP500"
         self.asset_name = asset
+        self.time_period = time_period
 
         self.market = pd.read_csv("CLEAN_DATA/SP500.csv", index_col="Date", parse_dates=True)
         try:
@@ -59,7 +68,7 @@ class AssetPortfolio:
     ###########
 
     def __repr__(self) -> str:
-        return f"Portfolio of {self.asset_name} and {self.market_name}"
+        return f"Portfolio of {self.asset_name} and {self.market_name} from {self.asset.index[0]} to {self.asset.index[-1]}"
     
     def __correlation(self) -> float:
         return self.asset["Log Returns"].corr(self.market["Log Returns"])
@@ -73,8 +82,8 @@ class AssetPortfolio:
         return (market_vol, asset_vol, portfolio_vol)
     
     def __mean_returns(self) -> tuple:
-        asset_mean = self.asset["Log Returns"].mean()
-        market_mean = self.market["Log Returns"].mean()
+        asset_mean = self.asset["Log Returns"].mean() * 252
+        market_mean = self.market["Log Returns"].mean() * 252
         port_mean = self.asset_weight*asset_mean + self.market_weight * market_mean
         return (market_mean, asset_mean, port_mean)
     
@@ -89,6 +98,18 @@ class AssetPortfolio:
         idx = self.market.join(self.asset, how="inner", lsuffix=".M", rsuffix=".A", on="Date").index
         self.market = self.market.loc[idx]
         self.asset = self.asset.loc[idx]
+
+        if self.time_period == "recession":
+            dates = pd.DataFrame(index=pd.DatetimeIndex([date for period in recession_periods for date in period]))
+        elif self.time_period == "bullish":
+            dates = pd.DataFrame(index=pd.DatetimeIndex([date for period in bullish_periods for date in period]))
+        else:
+            dates = pd.DataFrame(index=self.market.index)
+
+        dates = dates[dates.index.isin(self.market.index)]
+
+        self.market = self.market.loc[dates.index]
+        self.asset = self.asset.loc[dates.index]
 
     def create_portfolio(self):
         df = pd.concat([self.market["Adj Close"], self.asset["Adj Close"]], axis=1)
@@ -106,7 +127,7 @@ class AssetPortfolio:
         var = np.var(self.market["Log Returns"])
         cov = self.market["Log Returns"].cov(self.asset["Log Returns"])
         
-        beta = cov / var
+        beta = (cov / var)
         alpha = self.asset_mean - rf - beta * (self.market_mean - rf)
        
         # data = pd.concat([self.market["Log Returns"], self.asset["Log Returns"]], axis = 1).rename(columns = { "Log Returns" :"Market", "Log Returns" : "Asset"})
@@ -160,4 +181,4 @@ class AssetPortfolio:
 
 if __name__ == "__main__":
     # Testing purposes
-    port = AssetPortfolio("OIL")
+    pass

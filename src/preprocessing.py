@@ -14,7 +14,7 @@ data_dict = import_data("RAW_DATA", ignore_files=["README.md"])
 # Categorize data based on where we pulled them from and put them in their own lists
 
 # Yahoo Finance Data
-yfinance_data = ["T3", "T10", "T20", "SP500", "NASDAQ", "DOW", "BTC", "ETH", "OIL", "GOLD", "REST"]
+yfinance_data = ["T3", "T10", "T20", "SP500", "NASDAQ", "DOW", "BTC", "ETH", "OIL", "GOLD", "REST", "CSTP", "HLC", "VOL", "WHEAT", "USD", "EURO", "CORN"]
 
 # Clean Yahoo Finance Data
 

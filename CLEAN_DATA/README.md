@@ -1,1 +1,0 @@
-This folder stores the cleaned data after the raw data has been preprocessed 
