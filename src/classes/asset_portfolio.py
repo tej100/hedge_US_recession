@@ -160,15 +160,16 @@ class AssetPortfolio:
         Hypothesis Test to see if the volatility of the portfolio is significantly different from the market.
         """
         f_stat = (self.port_vol**2) / (other.port_vol**2)
-        f_crit_lower = f.ppf(1-alpha_level/2, len(self.portfolio)-1, len(other.portfolio)-1),
-        f_crit_upper = f.ppf(alpha_level/2, len(self.portfolio)-1, len(other.portfolio)-1)
+        f_crit_lower = f.ppf(alpha_level/2, len(self.portfolio)-1, len(other.portfolio)-1),
+        f_crit_upper = f.ppf(1-alpha_level/2, len(self.portfolio)-1, len(other.portfolio)-1)
         
 
-        print(f"{self} Volatility is statistically different from {other} volatility"
-                if f_stat < f_crit_lower or f_stat > f_crit_upper else
-                f"{self} Volatility is not statistically different from {other} volatility")
+        # print(f"{self} Volatility is statistically different from {other} volatility"
+        #         if f_stat < f_crit_lower or f_stat > f_crit_upper else
+        #         f"{self} Volatility is not statistically different from {other} volatility")
+        print(f"f_lower: {f_crit_lower}, f_stat: {f_stat}, f_upper: {f_crit_upper}")
 
-        return f_stat < f_crit_lower or f_stat > f_crit_upper
+        return (f_stat < f_crit_lower or f_stat > f_crit_upper)
 
         
     def optimize_weights(self):

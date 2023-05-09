@@ -1,5 +1,3 @@
-CLEAN_DATA
-RAW_DATA
 src/classes/__pycache__/asset_portfolio.cpython-39.pyc
 src/classes/__pycache__/asset_portfolio.cpython-310.pyc
 src/classes/__pycache__/objects.cpython-310.pyc
