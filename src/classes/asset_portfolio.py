@@ -148,9 +148,9 @@ class AssetPortfolio:
         t_stat = (mean - rf) / (std / np.sqrt(len(self.portfolio)))
         p_value = 1 - float(t.cdf(t_stat, len(self.portfolio)-1))
 
-        print("Portfolio Returns are statistically greater than the risk-free rate"
-              if p_value < alpha_level else
-              "Portfolio Returns are not statistically greater than the risk-free rate")
+        # print(f"{self} Returns are statistically greater than the risk-free rate"
+        #       if p_value < alpha_level else
+        #       f"{self} Returns are not statistically greater than the risk-free rate")
         
         return p_value < alpha_level
 
@@ -167,7 +167,6 @@ class AssetPortfolio:
         # print(f"{self} Volatility is statistically different from {other} volatility"
         #         if f_stat < f_crit_lower or f_stat > f_crit_upper else
         #         f"{self} Volatility is not statistically different from {other} volatility")
-        print(f"f_lower: {f_crit_lower}, f_stat: {f_stat}, f_upper: {f_crit_upper}")
 
         return (f_stat < f_crit_lower or f_stat > f_crit_upper)
 

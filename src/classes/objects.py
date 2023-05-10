@@ -20,16 +20,18 @@ recession_periods = [
 ]
 
 bullish_periods = [
-    pd.date_range(start = '1949-06-01', end = '1956-08-01'),
-    pd.date_range(start = '1957-10-01', end = '1961-12-01'),
+    pd.date_range(start = '1949-06-01', end = '1953-07-01'),
+    pd.date_range(start = '1954-05-01', end = '1956-08-01'),
+    pd.date_range(start = '1958-04-01', end = '1960-04-01'),
     pd.date_range(start = '1962-06-01', end = '1966-02-01'),
     pd.date_range(start = '1966-10-01', end = '1968-11-01'),
     pd.date_range(start = '1970-05-01', end = '1973-01-01'),
-    pd.date_range(start = '1974-10-01', end = '1980-11-01'),
-    pd.date_range(start = '1982-08-01', end = '1987-08-01'),
-    pd.date_range(start = '1987-12-01', end = '2000-03-01'),
+    pd.date_range(start = '1975-03-01', end = '1980-01-01'),
+    pd.date_range(start = '1982-11-01', end = '1987-08-01'),
+    pd.date_range(start = '1987-12-01', end = '1990-07-01'),
+    pd.date_range(start = '1991-03-01', end = '2000-03-01'),
     pd.date_range(start = '2002-10-01', end = '2007-10-01'),
-    pd.date_range(start = '2009-03-01', end = '2020-02-01'),
+    pd.date_range(start = '2009-06-01', end = '2020-02-01'),
     pd.date_range(start = '2020-08-07', end = '2021-12-31')
 ]
 
